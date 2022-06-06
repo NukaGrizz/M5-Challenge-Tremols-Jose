@@ -1,4 +1,4 @@
-# Moarkett
+# Game Store Backend Microservice
 Unlicensed
     
 ## Description
