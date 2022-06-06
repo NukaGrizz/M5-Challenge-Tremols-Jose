@@ -22,10 +22,6 @@ Game Store backend microservices with eureka registry and config server.
 
 unlicensed
 
-## Collaborators
-Joe Tremols \
-
- 
 ## Tests
 Tests are included as jUnit tests and exercisable in Intellij
 
