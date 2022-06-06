@@ -1,0 +1,164 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+  - url: http://localhost:7475
+    description: Generated server url
+paths:
+  /invoice:
+    get:
+      tags:
+        - invoice-controller
+      operationId: findAllInvoices
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InvoiceViewModel'
+    post:
+      tags:
+        - invoice-controller
+      operationId: purchaseItem
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvoiceCreateInput'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/InvoiceViewModel'
+  /invoice/{id}:
+    get:
+      tags:
+        - invoice-controller
+      operationId: findInvoice
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/InvoiceViewModel'
+  /invoice/cname/{name}:
+    get:
+      tags:
+        - invoice-controller
+      operationId: findInvoicesByCustomerName
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InvoiceViewModel'
+components:
+  schemas:
+    InvoiceViewModel:
+      required:
+        - city
+        - itemId
+        - itemType
+        - name
+        - quantity
+        - state
+        - street
+        - zipcode
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        street:
+          type: string
+        city:
+          type: string
+        state:
+          maxLength: 2
+          minLength: 2
+          type: string
+        zipcode:
+          type: string
+        itemType:
+          type: string
+        itemId:
+          type: integer
+          format: int64
+        unitPrice:
+          type: number
+        quantity:
+          maximum: 50000
+          minimum: 1
+          type: integer
+          format: int64
+        subtotal:
+          type: number
+        tax:
+          type: number
+        processingFee:
+          type: number
+        total:
+          type: number
+    InvoiceCreateInput:
+      required:
+        - city
+        - itemId
+        - itemType
+        - name
+        - quantity
+        - state
+        - street
+        - zipcode
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        street:
+          type: string
+        city:
+          type: string
+        state:
+          maxLength: 2
+          minLength: 2
+          type: string
+        zipcode:
+          type: string
+        itemType:
+          type: string
+        itemId:
+          type: integer
+          format: int64
+        quantity:
+          maximum: 50000
+          minimum: 1
+          type: integer
+          format: int64

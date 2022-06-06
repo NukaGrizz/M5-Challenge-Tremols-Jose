@@ -75,14 +75,14 @@ public class GameStoreServiceLayer {
             ConsoleViewModel tempCon = null;
             //use feign
             Optional<ConsoleViewModel> returnVal = Optional.ofNullable(gameStoreCatalog.getConsole(invoiceViewModel.getItemId()));
-
             if (returnVal.isPresent()) {
-                tempCon = returnVal.get();
+               tempCon = returnVal.get();
             } else {
                 throw new IllegalArgumentException("Requested item is unavailable.");
             }
-
-            if (invoiceViewModel.getQuantity()> tempCon.getQuantity()){
+            System.out.println(invoiceViewModel.getQuantity());
+            System.out.println(tempCon.getQuantity());
+            if (invoiceViewModel.getQuantity() > tempCon.getQuantity()){
                 throw new IllegalArgumentException("Requested quantity is unavailable.");
             }
 
@@ -126,7 +126,6 @@ public class GameStoreServiceLayer {
         }
 
         invoice.setQuantity(invoiceViewModel.getQuantity());
-
         invoice.setSubtotal(
                 invoice.getUnitPrice().multiply(
                         new BigDecimal(invoiceViewModel.getQuantity())).setScale(2, RoundingMode.HALF_UP));
@@ -146,10 +145,11 @@ public class GameStoreServiceLayer {
             throw new IllegalArgumentException(invoice.getState() + ": Invalid State code.");
         }
 
-        if (!tempTaxRate.equals(BigDecimal.ZERO))
+        if (!tempTaxRate.equals(BigDecimal.ZERO)) {
             invoice.setTax(tempTaxRate.multiply(invoice.getSubtotal()));
-        else
-            throw new IllegalArgumentException( invoice.getState() + ": Invalid State code.");
+        }else {
+            throw new IllegalArgumentException(invoice.getState() + ": Invalid State code.");
+        }
 
         BigDecimal processingFee;
         Optional<ProcessingFee> returnVal2 = processingFeeRepo.findById(invoiceViewModel.getItemType());
