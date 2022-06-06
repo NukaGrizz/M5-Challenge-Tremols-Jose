@@ -10,7 +10,6 @@ import java.util.Objects;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Game {
 
-
     private long id;
     private String title;
     private String esrbRating;

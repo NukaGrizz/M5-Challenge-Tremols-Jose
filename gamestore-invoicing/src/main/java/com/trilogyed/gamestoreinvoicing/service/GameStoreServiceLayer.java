@@ -1,5 +1,12 @@
 package com.trilogyed.gamestoreinvoicing.service;
 
+import com.trilogyed.gamestoreinvoicing.feign.GameStoreCatalog;
+import com.trilogyed.gamestoreinvoicing.repository.InvoiceRepository;
+import com.trilogyed.gamestoreinvoicing.repository.ProcessingFeeRepository;
+import com.trilogyed.gamestoreinvoicing.repository.TaxRepository;
+import com.trilogyed.gamestoreinvoicing.viewModel.ConsoleViewModel;
+import com.trilogyed.gamestoreinvoicing.viewModel.GameViewModel;
+import com.trilogyed.gamestoreinvoicing.viewModel.TShirtViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -9,12 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.trilogyed.gamestoreinvoicing.repository.*;
+
 import com.trilogyed.gamestoreinvoicing.model.*;
-import com.trilogyed.gamestoreinvoicing.viewModel.ConsoleViewModel;
-import com.trilogyed.gamestoreinvoicing.viewModel.GameViewModel;
 import com.trilogyed.gamestoreinvoicing.viewModel.InvoiceViewModel;
-import com.trilogyed.gamestoreinvoicing.viewModel.TShirtViewModel;
 
 @Component
 public class GameStoreServiceLayer {
@@ -30,11 +34,15 @@ public class GameStoreServiceLayer {
     ProcessingFeeRepository processingFeeRepo;
 
     @Autowired
-    public GameStoreServiceLayer(InvoiceRepository invoiceRepo, TaxRepository taxRepo, ProcessingFeeRepository processingFeeRepo) {
+    private final GameStoreCatalog gameStoreCatalog;
+
+    GameStoreServiceLayer(InvoiceRepository invoiceRepo, TaxRepository taxRepo, ProcessingFeeRepository processingFeeRepo, GameStoreCatalog gameStoreCatalog) {
         this.invoiceRepo = invoiceRepo;
         this.taxRepo = taxRepo;
         this.processingFeeRepo = processingFeeRepo;
+        this.gameStoreCatalog = gameStoreCatalog;
     }
+
 
     public InvoiceViewModel createInvoice(InvoiceViewModel invoiceViewModel) {
 
@@ -64,9 +72,9 @@ public class GameStoreServiceLayer {
         //Checks the item type and get the correct unit price
         //Check if we have enough quantity
         if (invoiceViewModel.getItemType().equals(CONSOLE_ITEM_TYPE)) {
-            Console tempCon = null;
+            ConsoleViewModel tempCon = null;
             //use feign
-            Optional<Console> returnVal = consoleRepo.findById(invoiceViewModel.getItemId());
+            Optional<ConsoleViewModel> returnVal = Optional.ofNullable(gameStoreCatalog.getConsole(invoiceViewModel.getItemId()));
 
             if (returnVal.isPresent()) {
                 tempCon = returnVal.get();
@@ -81,9 +89,9 @@ public class GameStoreServiceLayer {
             invoice.setUnitPrice(tempCon.getPrice());
 
         } else if (invoiceViewModel.getItemType().equals(GAME_ITEM_TYPE)) {
-            Game tempGame = null;
+            GameViewModel tempGame = null;
             //use feign
-            Optional<Game> returnVal = gameRepo.findById(invoiceViewModel.getItemId());
+            Optional<GameViewModel> returnVal = Optional.ofNullable(gameStoreCatalog.getGame(invoiceViewModel.getItemId()));
 
             if (returnVal.isPresent()) {
                 tempGame = returnVal.get();
@@ -97,9 +105,9 @@ public class GameStoreServiceLayer {
             invoice.setUnitPrice(tempGame.getPrice());
 
         } else if (invoiceViewModel.getItemType().equals(TSHIRT_ITEM_TYPE)) {
-            TShirt tempTShirt = null;
+            TShirtViewModel tempTShirt = null;
             //use feign
-            Optional<TShirt> returnVal = tShirtRepo.findById(invoiceViewModel.getItemId());
+            Optional<TShirtViewModel> returnVal = Optional.ofNullable(gameStoreCatalog.getTShirt(invoiceViewModel.getItemId()));
 
             if (returnVal.isPresent()) {
                 tempTShirt = returnVal.get();
