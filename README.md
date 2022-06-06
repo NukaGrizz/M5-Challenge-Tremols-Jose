@@ -16,7 +16,7 @@ Game Store backend microservices with eureka registry and config server.
 3. Open and run gamestore-registry in IntelliJ
 4. Open gamestore-catalog, change application.properties MSQLpassword and MYSQL username to your username and password, create MYSQL schema and insert data using sql scripts stored in sql directory in root of gamestore-catalog then run gamestore-catalog in IntelliJ
 5. Open gamestore-invoicing, change application.properties MSQLpassword and MYSQL username to your username and password, create MYSQL schema and insert data using sql scripts stored in sql directory in root of gamestore-invoicing then run gamestore-invoicing in IntelliJ
-6. OpenAPI yamls included in root folders of gamestore-catalog and gamestore-invoicing
+6. Review OpenAPI yamls included in root folders of gamestore-catalog and gamestore-invoicing which show how to exercise avalible endpoints.
 
 ## License
 
